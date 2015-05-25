@@ -1,0 +1,171 @@
+ 
+<!DOCTYPE html>
+
+<html lang="fr">
+	<head> 
+		<meta charset="utf-8" />
+		<title>ma page</title>
+		<style>
+
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		</style>
+	</head>
+	
+	<body>
+		
+		
+ 		<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+		<script>
+
+		window.onload = function () {
+
+			// set the varriable canvas
+			var canvas = document.createElement("canvas"),
+
+			// set the 2d context
+			c = canvas.getContext("2d"),
+
+			// create the particules object
+			particules = {},
+
+			// varriable particule index which will be incremented each time a particule will create
+			particuleIndex = 0,
+
+			// varriable particule max particule generate in one time
+			particuleNum = 30;
+
+			/// set the height of the canvas the height of the window
+			canvas.height = $(window).height();
+
+			// set the width of the canvas the width of the window
+			canvas.width = $(window).width();
+
+			// create a function to resize the canvas and clear the canvas and 
+			function resizeWindow(event){
+
+			/// set the height of the canvas the height of the window
+			canvas.height = $(window).height();
+
+			// set the width of the canvas the width of the window
+			canvas.width = $(window).width();
+
+			c.fillStyle = "black";
+			//reset the color to black of the all canvas
+
+			c.fillRect(0,0,canvas.width,canvas.height);	
+			//reset the color to black of the all canvas			
+				
+
+			}
+
+			// bind the page when there is a resize of the page and load the resizeWindow function 
+			$(window).bind("resize", resizeWindow);
+
+			//created hte canvas element dirctly in the dom in js
+			document.body.appendChild(canvas);
+
+			c.fillStyle = "black";
+			//reset the color to black of the all canvas
+
+			c.fillRect(0,0,canvas.width,canvas.height);	
+			//reset the color to black of the all canvas	
+
+			//set attribute for each particule
+			function Particule(){
+				// is position X start in the center of the page
+				this.x = canvas.width/2;
+				// is position Y start in the center of the page
+				this.y = canvas.height/2;
+				//set the velocity of the particle in random to the axe x and  y
+				//random genarate (0 to 1) number
+				this.vx = Math.random() * 10 - 5;
+				this.vy = Math.random() * 10 - 5;
+				// set the gravity which will be increase 
+				this.gravity = 0.3;
+				// set the particleindex for each particule
+				particuleIndex ++;
+				// generate an array particule with the index of the element
+				particules[particuleIndex] = this;
+				particules[particuleIndex] = this;
+
+				// the instance of the particule get the id
+				this.id = particuleIndex;
+
+				// set the life of the element to 0
+				this.life = 0;
+
+				// set the limit of the life of the stop element in ramdom way
+				this.maxLife = Math.random() * 30 + 50;
+
+				// set the color in hsla in ramdom way
+				this.color = "hsla("+ parseInt(Math.random()*360, 10)+",100%,50%,0.2)";
+
+
+			}
+			// draw the particule in a varriable who will apply the drawing function
+			Particule.prototype.draw  = function(){
+
+				// increase the position in the axe X
+				this.x += this.vx;
+				// increase the position in the axe Y
+				this.y += this.vy;
+
+				// if random(0 to 1 ) number is less than 0.1
+				if(Math.random () < 0.1){
+					this.vx = Math.random() * 10 - 5;
+					this.vy = Math.random() * 10 - 5;
+				}
+				//increase the life 
+				this.life++;
+
+				//if the element life attend to is Maxlife  
+				if (this.life >= this.maxLife) {
+
+					//delete the particle id of the element in the array particles and delete indirectly the particule
+					delete particules[this.id];
+				}
+
+				// set the color of the particule
+				c.fillStyle = this.color;
+
+				// create the rectangle particule
+				c.fillRect(this.x, this.y, 10, 10);
+			};
+
+		
+			// set varriable to a new particule
+			var p = new Particule();
+
+
+			// set the clear function with an interval
+			setInterval(function(){
+			// set the canvas compoosition of particule to the attribut source over in the begining
+			c.globalCompositeOperation = "source-over"
+
+			// set the canvas to black 
+			c.fillStyle = "black";
+
+			// select all the canvas
+			c.fillRect(0,0,canvas.width,canvas.height);
+				// for each element create element 60 each time
+				for (var i = 0; i < particuleNum; i++) {
+				// create the particule
+				new	Particule();
+			}
+			// set the canvas compoosition operation to the attribut lighter when the particule is create
+			c.globalCompositeOperation = "lighter"
+			// for each particules do the function draw()
+			for (var i in particules) {
+				particules[i].draw();
+			}
+
+			},30);
+
+		};
+	
+		</script> 
+	</body>
+</html>
